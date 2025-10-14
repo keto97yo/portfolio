@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Portfolio – Louis Meiering</title>
+  <meta name="description" content="Horizontales Portfolio von Louis Meiering – Mediengestaltung, Design & Fotografie.">
+  <!-- Headline (stark stilisiert) + Body -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================
+       DESIGN TOKENS / COLORS
+       ========================= */
+    :root{
+      --main:#450693;   /* Primär */
+      --sub:#8C00FF;    /* Sekundär */
+      --a1:#FF3F7F;     /* Akzent 1 */
+      --a2:#FFC400;     /* Akzent 2 */
+      --bg:#0b0b0c;     /* Dunkles Grau */
+      --text:#f5f7fb;   /* Weißlich */
+      --muted:#b7b9c8;  /* Sekundärtext */
+      --card:#111216;
+      --ring:rgba(255,255,255,.12);
+      --glass:rgba(255,255,255,.06);
+      --shadow:0 30px 80px rgba(0,0,0,.45);
+      --snap-gap: clamp(16px, 4vw, 40px);
+    }
+
+    * { box-sizing: border-box }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      background: radial-gradient(1200px 800px at 80% -20%, rgba(140,0,255,.15), transparent 60%),
+                  radial-gradient(900px 600px at -10% 110%, rgba(255,63,127,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      font: 16px/1.6 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow: hidden; /* keine vertikale Scrollbar */
+    }
+
+    a { color: inherit; text-decoration: none }
+    img { max-width: 100%; display: block }
+
+    /* =========================
+       APP SHELL
+       ========================= */
+    .bar{
+      position: fixed; inset: 0 auto auto 0; right: 0; height: 64px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 18px;
+      background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.25));
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--ring);
+      z-index: 20;
+    }
+    .brand{
+      display:flex; align-items:center; gap: 10px; font-weight: 800; letter-spacing:.2px;
+    }
+    .dot{ width:12px; height:12px; border-radius:50%; background: linear-gradient(135deg, var(--a2), var(--a1)); box-shadow:0 0 18px rgba(255,196,0,.45)}
+    .brand span{ font-size: 14px; opacity:.8 }
+    .hint{
+      font-size: 12px; opacity:.7; border:1px solid var(--ring); padding:6px 10px; border-radius:12px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .kbd{
+      font-size:11px; border:1px solid var(--ring); padding:2px 6px; border-radius:6px; opacity:.8;
+      background:var(--glass)
+    }
+
+    /* =========================
+       HORIZONTAL STAGE
+       ========================= */
+    .stage{
+      position: fixed; inset: 64px 0 0 0; /* unter der Topbar */
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: min(100vw, 100vw);
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      gap: var(--snap-gap);
+      padding: 0 var(--snap-gap) var(--snap-gap);
+      -webkit-overflow-scrolling: touch;
+    }
+    .stage::-webkit-scrollbar{ height: 10px }
+    .stage::-webkit-scrollbar-thumb{ background: linear-gradient(90deg, var(--main), var(--sub)); border-radius: 999px }
+    .stage::-webkit-scrollbar-track{ background: rgba(255,255,255,.06) }
+
+    section.section{
+      scroll-snap-align: start;
+      position: relative;
+      height: calc(100vh - 64px - var(--snap-gap));
+      width: calc(100vw - var(--snap-gap)*2);
+      border: 1px solid var(--ring);
+      border-radius: 28px;
+      background:
+        radial-gradient(650px 450px at 110% -20%, rgba(69,6,147,.25), transparent 60%),
+        radial-gradient(600px 500px at -15% 120%, rgba(255,63,127,.18), transparent 60%),
+        var(--card);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /* Parallax Layers (absolut, pointer-safe) */
+    .parallax{
+      position:absolute; inset:0; overflow:hidden; z-index:0; pointer-events:none;
+    }
+    .orb{
+      position:absolute; width: clamp(160px, 35vw, 520px); aspect-ratio:1/1; border-radius:50%;
+      filter: blur(20px);
+      opacity:.25; transform: translate3d(0,0,0) scale(1);
+      background: radial-gradient(circle at 30% 30%, var(--a2), transparent 60%),
+                  radial-gradient(circle at 70% 70%, var(--a1), transparent 55%),
+                  radial-gradient(circle at 40% 60%, var(--sub), transparent 60%);
+      mix-blend-mode: screen;
+    }
+
+    /* CONTENT LAYOUT */
+    .wrap{
+      position:relative; z-index:1; height:100%; display:grid;
+      grid-template-columns: 1.2fr 1fr; gap: clamp(16px, 4vw, 40px);
+      padding: clamp(16px, 3vw, 32px);
+    }
+    .stack{ align-self:center; max-width: 720px }
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size: 12px; letter-spacing:.5px; text-transform:uppercase;
+      padding: 8px 12px; border-radius: 999px; border:1px solid var(--ring);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+
+    h1, h2{ margin: 0 0 12px }
+    .display{
+      font-family: "Anton", Impact, "Inter", system-ui, sans-serif;
+      line-height: .9;
+      letter-spacing:.5px;
+      font-size: clamp(40px, 8vw, 112px);
+      background: linear-gradient(135deg, var(--a2), var(--a1) 45%, var(--sub));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      text-shadow: 0 10px 40px rgba(140,0,255,.25);
+      transform-origin: left center;
+    }
+    .lead{ font-size: clamp(14px, 1.6vw, 18px); color: var(--muted); max-width: 60ch }
+    .btns{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px }
+    .btn{
+      display:inline-flex; align-items:center; gap:10px; font-weight:600;
+      padding:12px 16px; border-radius:14px; border:1px solid var(--ring);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .btn:hover{ transform: translateY(-2px) scale(1.02); box-shadow:0 12px 30px rgba(0,0,0,.35) }
+
+    .panel{
+      align-self:center; justify-self:stretch;
+      border:1px solid var(--ring); border-radius:20px; padding:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    }
+    .grid{ display:grid; gap:12px }
+    .chip{
+      border:1px solid var(--ring); border-radius:12px; padding:10px 12px;
+      font-size:14px; background:rgba(255,255,255,.03)
+    }
+    .list{ margin:10px 0 0; padding:0; list-style:none; color:var(--muted) }
+    .list li{ margin:6px 0 }
+
+    /* MEDIA / IMAGE FRAMES with hover scale */
+    .frame{
+      position:relative; border-radius:18px; overflow:hidden; border:1px solid var(--ring);
+      transform: translateZ(0); /* GPU */
+    }
+    .frame img{ width:100%; height:100%; object-fit:cover; transform:scale(1.02); transition: transform .6s ease }
+    .frame:hover img{ transform:scale(1.06) }
+
+    /* SECTION-SPECIFIC quick tweaks */
+    .two-col{ grid-template-columns: 1.1fr 1.1fr }
+    .gallery{ display:grid; grid-template-columns: 1.2fr .8fr; gap:12px }
+    .gallery .frame:nth-child(2){ grid-row: span 2; }
+
+    /* FOOTER CONTACT (inside last section) */
+    .contact{
+      margin-top: 16px; display:grid; gap:8px; font-size:14px; color:var(--muted)
+    }
+    .contact a{ text-decoration:underline dotted rgba(255,255,255,.25) }
+
+    /* MOBILE ADJUSTMENTS */
+    @media (max-width: 860px){
+      .wrap{ grid-template-columns: 1fr; align-content:center }
+      .panel{ order: 2 }
+      .stack{ order: 1 }
+      .gallery{ grid-template-columns: 1fr 1fr }
+      .bar{ height: 56px }
+      .stage{ inset: 56px 0 0 0 }
+      .section{ height: calc(100vh - 56px - var(--snap-gap)); }
+      .hint .kbd{ display:none }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="bar">
+    <div class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <strong>Louis Meiering</strong><span>Portfolio</span>
+    </div>
+    <div class="hint">
+      <span>Swipe (mobil) / Horizontal scrollen (Desktop)</span>
+      <span class="kbd">⇧ + Mausrad</span>
+      <span class="kbd">Shift + Wheel</span>
+    </div>
+  </div>
+
+  <!-- STAGE: horizontal / snap -->
+  <main class="stage" id="stage" tabindex="0" aria-label="Horizontales Portfolio – snappend">
+
+    <!-- ========== SECTION 1: ABOUT ME ========== -->
+    <section class="section" id="about">
+      <!-- Parallax Layer -->
+      <div class="parallax" aria-hidden="true">
+        <div class="orb" data-speed="0.15" style="top:-8%; left:-6%"></div>
+        <div class="orb" data-speed="0.28" style="bottom:-18%; right:-10%"></div>
+      </div>
+
+      <div class="wrap">
+        <div class="stack">
+          <span class="tag">About me</span>
+          <h1 class="display" data-scale>Designer&nbsp;&nbsp;·&nbsp;&nbsp;Fotograf</h1>
+          <p class="lead">
+            Mediengestalter mit Fokus auf klare Erscheinungsbilder, strukturiertes Layout
+            und hochwertiges Bild-/Videomaterial. Hands-on von Idee bis Umsetzung – mit
+            besonderem Blick für Konsistenz, Typografie und Bildsprache.
+          </p>
+          <div class="btns">
+            <a class="btn" href="#skills">Zu Skills →</a>
+            <a class="btn" href="mailto:meiering.louis97@gmail.com">Kontakt per Mail</a>
+          </div>
+        </div>
+
+        <div class="panel grid">
+          <div class="frame" style="aspect-ratio: 16/10;">
+            <!-- Austauschbar: /images/about.jpg -->
+            <img src="./images/about.jpg" alt="Portrait oder Arbeitsumgebung von Louis">
+          </div>
+          <ul class="list">
+            <li><strong>Ort:</strong> Bocholt</li>
+            <li><strong>Kontakt:</strong> <a href="mailto:meiering.louis97@gmail.com">meiering.louis97@gmail.com</a> · <a href="tel:+491785300541">0178 5300 541</a></li>
+            <li><strong>Tools:</strong> Adobe (Ps, Ai, Id, Pr, Ae, Lr) · Cinema4D · Blender</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 2: SKILLS ========== -->
+    <section class="section" id="skills">
+      <div class="parallax" aria-hidden="true">
+        <div class="orb" data-speed="0.20" style="top:-15%; right:-12%"></div>
+        <div class="orb" data-speed="0.35" style="bottom:-22%; left:-6%"></div>
+      </div>
+
+      <div class="wrap two-col">
+        <div class="stack">
+          <span class="tag">Skills</span>
+          <h2 class="display" data-scale>Gestaltung&nbsp;/&nbsp;Content</h2>
+          <p class="lead">
+            Stärke in systematischer Gestaltung (Raster, Hierarchie, Konsistenz) und
+            in Content-Produktion: Fotografie, Retusche, Schnitt und Motion.
+          </p>
+
+          <div class="btns">
+            <span class="chip">Layout & Typografie</span>
+            <span class="chip">Branding</span>
+            <span class="chip">Fotografie & Retusche</span>
+            <span class="chip">Videoschnitt & Motion</span>
+            <span class="chip">Blender / C4D Basics</span>
+          </div>
+
+          <ul class="list">
+            <li><strong>Adobe:</strong> Photoshop, Illustrator, InDesign, Premiere, After Effects, Lightroom</li>
+            <li><strong>Sprachen:</strong> Deutsch (C2), Englisch (fließend)</li>
+            <li><strong>Führerschein:</strong> Klasse B</li>
+          </ul>
+        </div>
+
+        <div class="panel grid">
+          <div class="frame" style="aspect-ratio: 4/3;">
+            <!-- Austauschbar: /images/skills.jpg -->
+            <img src="./images/skills.jpg" alt="Arbeitsprobe: typografisches Layout">
+          </div>
+          <div class="grid" style="grid-template-columns: 1fr 1fr; gap:12px">
+            <div class="chip">Saubere Raster</div>
+            <div class="chip">Bildkonzepte</div>
+            <div class="chip">Konsequente CI</div>
+            <div class="chip">Produktpräsentation</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 3: GESTALTUNG / DESIGN ========== -->
+    <section class="section" id="design">
+      <div class="parallax" aria-hidden="true">
+        <div class="orb" data-speed="0.18" style="top:-10%; left:65%"></div>
+        <div class="orb" data-speed="0.30" style="bottom:-18%; left:-8%"></div>
+      </div>
+
+      <div class="wrap">
+        <div class="stack">
+          <span class="tag">Projektbeispiele</span>
+          <h2 class="display" data-scale>Gestaltung&nbsp;/&nbsp;Design</h2>
+          <p class="lead">
+            Auswahl an Layouts & Kampagnen – vom Entwurf bis zur finalen Reinzeichnung.
+            Fokus auf klare Information, starke Bild-Typo-Balance und Wiedererkennbarkeit.
+          </p>
+          <div class="btns">
+            <a class="btn" href="#photo">Weiter zu Fotografie →</a>
+          </div>
+
+          <ul class="list">
+            <li><strong>KAAST Werkzeugmaschinen GmbH</strong> — Mediengestaltung / Art Direction (2023–2024)</li>
+            <li><strong>Bewegbar GbR</strong> — Buchhaltung & grafische Zuarbeit (laufend)</li>
+            <li>Weitere Arbeiten im Gespräch / auf Anfrage</li>
+          </ul>
+        </div>
+
+        <div class="panel gallery">
+          <!-- Austauschbar: design1.jpg, design2.jpg, design3.jpg -->
+          <div class="frame" style="aspect-ratio: 16/10;">
+            <img src="./images/design1.jpg" alt="Gestaltungsarbeit 1">
+          </div>
+          <div class="frame" style="aspect-ratio: 3/4;">
+            <img src="./images/design2.jpg" alt="Gestaltungsarbeit 2">
+          </div>
+          <div class="frame" style="aspect-ratio: 16/12;">
+            <img src="./images/design3.jpg" alt="Gestaltungsarbeit 3">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 4: FOTOGRAFIE ========== -->
+    <section class="section" id="photo">
+      <div class="parallax" aria-hidden="true">
+        <div class="orb" data-speed="0.22" style="top:-16%; right:-8%"></div>
+        <div class="orb" data-speed="0.32" style="bottom:-20%; left:10%"></div>
+      </div>
+
+      <div class="wrap">
+        <div class="stack">
+          <span class="tag">Fotografie</span>
+          <h2 class="display" data-scale>Bildsprache&nbsp;mit&nbsp;Fokus</h2>
+          <p class="lead">
+            Produktionen mit klarer Lichtführung, sauberer Farbkontrolle und konsistenter
+            Serie – inklusive Retusche und Export für die Zielplattformen.
+          </p>
+          <div class="btns">
+            <a class="btn" href="mailto:meiering.louis97@gmail.com">Anfrage senden</a>
+            <a class="btn" href="#about">Zurück zum Start</a>
+          </div>
+
+          <div class="contact">
+            <div><strong>Kontakt:</strong> <a href="mailto:meiering.louis97@gmail.com">meiering.louis97@gmail.com</a></div>
+            <div><strong>Telefon:</strong> <a href="tel:+491785300541">+49 178 5300 541</a></div>
+            <div><strong>Adresse:</strong> Margeritenweg 17, 46395 Bocholt</div>
+          </div>
+        </div>
+
+        <div class="panel grid" style="grid-template-columns: 1fr 1fr; gap:12px">
+          <!-- Austauschbar: photo1.jpg, photo2.jpg, photo3.jpg, photo4.jpg -->
+          <div class="frame" style="aspect-ratio: 4/3;"><img src="./images/photo1.jpg" alt="Foto 1"></div>
+          <div class="frame" style="aspect-ratio: 3/4;"><img src="./images/photo2.jpg" alt="Foto 2"></div>
+          <div class="frame" style="aspect-ratio: 16/10;"><img src="./images/photo3.jpg" alt="Foto 3"></div>
+          <div class="frame" style="aspect-ratio: 1/1;"><img src="./images/photo4.jpg" alt="Foto 4"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* =========================================
+       HORIZONTAL UX + PARALLAX & SCALE EFFECTS
+       ========================================= */
+
+    const stage = document.getElementById('stage');
+
+    // 1) Arrow keys: navigate between sections
+    window.addEventListener('keydown', (e) => {
+      const step = stage.clientWidth; // snap width
+      if (e.key === 'ArrowRight') stage.scrollBy({ left: step, behavior: 'smooth' });
+      if (e.key === 'ArrowLeft')  stage.scrollBy({ left: -step, behavior: 'smooth' });
+    });
+
+    // 2) Shift + Wheel (Desktop) Hinweis ist im UI, native Browser tun das bereits
+    // 3) Parallax: move orbs based on scroll position
+    const orbs = [...document.querySelectorAll('.orb')];
+    const scales = [...document.querySelectorAll('[data-scale]')];
+
+    function parallax(){
+      const x = stage.scrollLeft;      // aktuelle horizontale Position
+      const w = stage.clientWidth;     // Breite eines Snap-Views
+      // Parallax translation
+      orbs.forEach(el => {
+        const speed = parseFloat(el.dataset.speed || 0.25);
+        el.style.transform = `translate3d(${x * speed * -0.08}px, ${x * speed * 0.02}px, 0) scale(1)`;
+      });
+      // Scale Headlines leicht beim Eintritt in den Viewport
+      scales.forEach((el, idx) => {
+        // progress je Abschnitt ermitteln
+        const section = el.closest('.section');
+        const left = section.offsetLeft;
+        const progress = Math.min(1, Math.max(0, 1 - Math.abs(x - left) / w)); // 0..1
+        const s = 0.96 + progress * 0.08; // 0.96 → 1.04
+        const y = (1 - progress) * 14;    // 14px → 0
+        el.style.transform = `translateY(${y}px) scale(${s})`;
+        el.style.opacity = 0.55 + progress * 0.45;
+      });
+    }
+    // init + on scroll
+    parallax();
+    stage.addEventListener('scroll', parallax, { passive:true });
+
+    // 4) Touch tweak: ensure swipe feels snappy (native horizontal scroll already ok)
+    // Optional inertia adjustments could be made with CSS overscroll-behavior if needed.
+  </script>
+</body>
+</html>
