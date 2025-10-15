@@ -6,11 +6,10 @@
 <title>Louis Meiering — Portfolio</title>
 <meta name="description" content="Portfolio von Louis Meiering — Gestaltung, Fotografie, Medien. Horizontal, snappend, editorial.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Editorial: starke Grotesk + ruhiger Body -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* =========================
-   TOKENS (Vorlagen-Farbraum)
+   TOKENS (Editorial-Farbraum)
    ========================= */
 :root{
   --bg: #E7E3DE;      /* warmes helles Grau (Hintergrund) */
@@ -18,8 +17,7 @@
   --ink: #111111;     /* fast Schwarz (Text) */
   --muted: #6C6B69;   /* sekundärer Text */
   --line: rgba(0,0,0,.12);
-  --red: #FF3F3F;     /* kräftiger Rot-Akzent der Vorlage */
-  --dot: #D73535;     /* dunkleres Rot für Details */
+  --red: #FF3F3F;     /* kräftiger Rot-Akzent */
   --snap-gap: clamp(16px, 5vw, 52px);
   --radius: 18px;
 }
@@ -30,7 +28,7 @@ html{ background:var(--bg) }
 body{
   margin:0; font:16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color:var(--ink);
-  overflow: hidden; /* keine vertikale Scrollbar */
+  overflow: hidden; /* keine vertikale Scrollbar der Seite */
 }
 
 /* =========================
@@ -52,25 +50,19 @@ body{
   border:2px solid var(--ink);
   position:relative; overflow:hidden;
 }
-.stamp::before{
+.brand .stamp::before{
   content:""; position:absolute; inset:-40% -10%;
   background:var(--red); transform:rotate(-12deg);
 }
 .brand em{ font-style: normal; font-family:"Space Grotesk", Inter, sans-serif; font-weight:700 }
 
-/* Ungewöhnliche Navigation: „Rail-Dial“
-   – Kreis/Arc rechts oben, zeigt Fortschritt & erlaubt Jump
-*/
+/* Ungewöhnliche, schlichte Navigation: Bullets + Arc */
 .railnav{
   position: absolute; top:8px; right:10px; height:48px; display:flex; align-items:center; gap:10px;
 }
-.railnav .arc{
-  position:relative; width:110px; height:110px; pointer-events:none;
-}
-.railnav svg{   position:absolute;   top:-20px;   left:-10px;   overflow:visible; }
-.railnav .bullets{
-  display:flex; gap:10px; align-items:center; margin-left:8px;
-}
+.railnav .arc{ position:relative; width:110px; height:110px; pointer-events:none; }
+.railnav svg{ position:absolute; top:-20px; left:-10px; overflow:visible; }
+.bullets{ display:flex; gap:10px; align-items:center; margin-left:8px; }
 .bullet{
   width:11px; height:11px; border-radius:50%; background:#bbb; border:1px solid var(--ink);
   cursor:pointer; transition:transform .2s ease, background .2s ease;
@@ -79,7 +71,7 @@ body{
 .hint{ font-size:12px; color:var(--muted); margin-left:6px }
 
 /* =========================
-   HORIZONTAL RAIL
+   HORIZONTAL RAIL (Seiten)
    ========================= */
 .rail{
   position:fixed; inset:64px 0 0 0;
@@ -110,10 +102,7 @@ body{
   padding:20px clamp(18px, 3.2vw, 36px);
   border-bottom:1px solid var(--line);
 }
-.kicker{
-  font: 700 clamp(18px, 2.6vw, 28px)/1 "Space Grotesk", Inter, sans-serif;
-  letter-spacing:.4px;
-}
+.kicker{ font: 700 clamp(18px, 2.6vw, 28px)/1 "Space Grotesk", Inter, sans-serif; letter-spacing:.4px; }
 .label{ color:var(--muted); font-size:12px }
 
 .body{
@@ -156,19 +145,84 @@ h1,h2{ margin:0 }
 .list li{ padding:8px 0; border-bottom:1px solid var(--line); font-size:14px }
 .badge{ display:inline-block; font-weight:700; font-size:12px; padding:4px 8px; border:1px solid var(--ink); border-radius:999px }
 
-/* Parallax-Deko (dezent) */
-.decoy{
-  position:absolute; inset:auto; pointer-events:none; opacity:.14; mix-blend-mode:multiply;
-  transform-origin: center;
+/* =========================
+   NEUE FOTOGRAFIE-SEKTION
+   ========================= */
+.photo-shell{
+  display:grid;
+  grid-template-columns: 0.9fr 1.1fr; /* links Raster, rechts Scrollbereich */
+  gap: clamp(14px, 2.6vw, 28px);
+  height: 100%;
+  padding: clamp(14px, 2.6vw, 28px);
+}
+@media (max-width: 980px){
+  .photo-shell{ grid-template-columns: 1fr; }
 }
 
-/* Footerzeile im letzten Panel */
-.bottomline{
-  display:flex; gap:16px; flex-wrap:wrap; align-items:center; color:var(--muted); font-size:12px;
-  border-top:1px solid var(--line); padding-top:10px; margin-top:12px;
+/* Linke Seite: 3x5 Mini-Kachelraster (15) */
+.photo-wall{
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 6px; /* enger, wie Kontaktabzug */
+  height: 100%;
+}
+.tile{
+  position:relative; border:1px solid var(--line); border-radius:10px; overflow:hidden;
+  background:#ddd;
+  aspect-ratio: 1/1; /* Quadratisch */
+}
+.tile img{ width:100%; height:100%; object-fit:cover; display:block; }
+.tile.red{ background:var(--red); border-color: rgba(0,0,0,.18); }
+.tile.red::after{
+  content:""; position:absolute; inset:8px;
+  border:2px solid rgba(255,255,255,.25); border-radius:8px;
+  /* nur visuelles Signal, kein Text */
 }
 
-/* Mobile tweaks */
+/* Rechte Seite: eigener vertikaler Scrollbereich */
+.photo-scroll{
+  position:relative;
+  border:1px solid var(--line); border-radius:14px;
+  background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35));
+  overflow:hidden; /* Clip für Parallax-Effekt */
+  display:grid; grid-template-rows: 1fr; /* nur Inhalt */
+}
+.photo-scroll-inner{
+  overflow-y:auto; overflow-x:hidden;
+  padding: clamp(10px, 2vw, 18px);
+  scroll-snap-type: y proximity; /* sanftes Einrasten */
+  height: 100%;
+}
+.photo-scroll-inner::-webkit-scrollbar{ width:10px }
+.photo-scroll-inner::-webkit-scrollbar-thumb{ background:rgba(0,0,0,.35); border-radius:999px }
+
+/* Einzelne Shots */
+.shot, .shot-text{
+  border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  background:#f7f6f4;
+  margin-bottom: clamp(12px, 2.2vw, 22px);
+  scroll-snap-align: start;
+  transform: translateY(18px) scale(.98);
+  opacity: 0;
+  transition: transform .7s cubic-bezier(.2,.7,0,1), opacity .7s ease;
+}
+.shot.in, .shot-text.in{
+  transform: translateY(0) scale(1); opacity: 1;
+}
+.shot img{ width:100%; height:100%; object-fit:cover; display:block; aspect-ratio: 1/1; }
+
+/* Text-Kachel (gleich groß wie Bilder in der Gestaltung) */
+.shot-text{
+  background: var(--red); color: #fff;
+  display:grid; align-content:center; padding: clamp(16px, 3vw, 28px);
+}
+.shot-text h3{
+  margin:0 0 8px; font: 700 clamp(18px, 2.4vw, 26px)/1 "Space Grotesk", Inter, sans-serif; letter-spacing:.3px
+}
+.shot-text p{ margin:0; font-size: clamp(13px, 1.5vw, 16px); line-height:1.6 }
+
+/* Mobile Tweaks */
 @media (max-width: 860px){
   .topbar{ height:56px }
   .rail{ inset:56px 0 0 0 }
@@ -189,7 +243,6 @@ h1,h2{ margin:0 }
     </div>
   </div>
 
-  <!-- Ungewöhnliche, schlichte Navigation: Arc + Bullets -->
   <div class="railnav" aria-label="Seitennavigation">
     <div class="arc" aria-hidden="true">
       <svg width="140" height="140" viewBox="0 0 140 140">
@@ -217,7 +270,6 @@ h1,h2{ margin:0 }
     </div>
 
     <div class="body" style="position:relative">
-      <img class="decoy" src="./images/decoy.svg" alt="" width="240" style="right:6%; top:6%" />
       <div class="grid" style="align-content:center; gap:14px">
         <h1 class="display">Gestaltung & Fotografie</h1>
         <p class="lead">
@@ -239,9 +291,9 @@ h1,h2{ margin:0 }
         </div>
       </div>
 
-      <div class="grid" style="align-content:center">
+      <div class="grid">
         <div class="frame" style="aspect-ratio:16/9">
-          <img src="./images/hero.jpg" alt="Hero-Bild / Team / Editorial">
+          <img src="./images/hero.jpg" alt="Hero-Bild / Editorial">
         </div>
         <ul class="list">
           <li><strong>Stärken:</strong> Raster, Typo-Hierarchie, saubere Reinzeichnung</li>
@@ -318,38 +370,68 @@ h1,h2{ margin:0 }
     </div>
   </section>
 
-  <!-- ========== 4. FOTOGRAFIE ========== -->
+  <!-- ========== 4. FOTOGRAFIE — NEUE SEKTION ========== -->
   <section class="section" id="photo" aria-label="Fotografie">
     <div class="head">
       <div class="kicker">FOTOGRAFIE</div>
-      <div class="label muted">Serien & Reportagen</div>
+      <div class="label muted">Miniaturen & Serie</div>
     </div>
 
-    <div class="body">
-      <div class="grid" style="align-content:center; gap:14px">
-        <h2 class="display">Porträts / Reportage</h2>
-        <p class="lead">Lichtführung, Farbkontrolle, konsistente Serien — inkl. Retusche & Export.</p>
+    <div class="photo-shell">
+      <!-- Linke Spalte: 3x5 Mini-Kacheln (15) -->
+      <div class="photo-wall" aria-label="Miniatur-Kacheln">
+        <!-- Reihenfolge frei; eine rote Kachel ohne Text als Signal -->
+        <div class="tile"><img src="./images/photo1_thumb.jpg" alt="Miniatur 1"></div>
+        <div class="tile red" title="Text im rechten Bereich, weiter scrollen"></div>
+        <div class="tile"><img src="./images/photo2_thumb.jpg" alt="Miniatur 2"></div>
+        <div class="tile"><img src="./images/photo3_thumb.jpg" alt="Miniatur 3"></div>
+        <div class="tile"><img src="./images/photo4_thumb.jpg" alt="Miniatur 4"></div>
 
-        <div class="grid grid-3">
-          <div class="frame" style="aspect-ratio: 4/3;"><img src="./images/photo1.jpg" alt="Foto 1"></div>
-          <div class="frame" style="aspect-ratio: 3/4;"><img src="./images/photo2.jpg" alt="Foto 2"></div>
-          <div class="frame" style="aspect-ratio: 16/10;"><img src="./images/photo3.jpg" alt="Foto 3"></div>
-        </div>
+        <div class="tile"><img src="./images/photo5_thumb.jpg" alt="Miniatur 5"></div>
+        <div class="tile"><img src="./images/photo6_thumb.jpg" alt="Miniatur 6"></div>
+        <div class="tile"><img src="./images/photo7_thumb.jpg" alt="Miniatur 7"></div>
+        <div class="tile"><img src="./images/photo8_thumb.jpg" alt="Miniatur 8"></div>
+        <div class="tile"><img src="./images/photo9_thumb.jpg" alt="Miniatur 9"></div>
 
-        <div class="bottomline">
-          <span>Kontakt:</span>
-          <a href="mailto:meiering.louis97@gmail.com">meiering.louis97@gmail.com</a>
-          <span>·</span>
-          <a href="tel:+491785300541">+49 178 5300 541</a>
-          <span>· Bocholt</span>
-        </div>
+        <div class="tile"><img src="./images/photo10_thumb.jpg" alt="Miniatur 10"></div>
+        <div class="tile"><img src="./images/photo11_thumb.jpg" alt="Miniatur 11"></div>
+        <div class="tile"><img src="./images/photo12_thumb.jpg" alt="Miniatur 12"></div>
+        <div class="tile"><img src="./images/photo13_thumb.jpg" alt="Miniatur 13"></div>
+        <div class="tile"><img src="./images/photo14_thumb.jpg" alt="Miniatur 14"></div>
       </div>
 
-      <div class="grid">
-        <div class="frame" style="aspect-ratio: 5/4;"><img src="./images/photo4.jpg" alt="Foto 4"></div>
-        <div class="block-red">
-          <h3>Verfügbar</h3>
-          <p>Projektanfragen willkommen — bevorzugt klare Briefings, Mood & Timing. Antwort i. d. R. <strong>innerhalb eines Werktags</strong>.</p>
+      <!-- Rechte Spalte: eigener Scrollbereich -->
+      <div class="photo-scroll" aria-label="Scrollbereich Fotografie">
+        <div class="photo-scroll-inner" id="photoScroll">
+          <!-- 1) Erstes Bild sofort sichtbar -->
+          <figure class="shot in">
+            <img src="./images/photo1.jpg" alt="Foto 1">
+          </figure>
+
+          <!-- 2) Rote Text-Kachel (Reveal beim ersten Scroll) -->
+          <article class="shot-text" id="photoText">
+            <h3>Warum Fotografie?</h3>
+            <p>
+              Mich reizt an Fotografie der ruhige Blick auf Form, Licht und Farbe — Motive, die
+              sich erst in der Serie erschließen. Mir geht es um Klarheit in der Bildsprache,
+              kontrollierte Reduktion und eine Atmosphäre, die nicht laut sein muss, um präsent zu sein.
+            </p>
+          </article>
+
+          <!-- 3) Restliche Fotos (2..14) -->
+          <figure class="shot"><img src="./images/photo2.jpg" alt="Foto 2"></figure>
+          <figure class="shot"><img src="./images/photo3.jpg" alt="Foto 3"></figure>
+          <figure class="shot"><img src="./images/photo4.jpg" alt="Foto 4"></figure>
+          <figure class="shot"><img src="./images/photo5.jpg" alt="Foto 5"></figure>
+          <figure class="shot"><img src="./images/photo6.jpg" alt="Foto 6"></figure>
+          <figure class="shot"><img src="./images/photo7.jpg" alt="Foto 7"></figure>
+          <figure class="shot"><img src="./images/photo8.jpg" alt="Foto 8"></figure>
+          <figure class="shot"><img src="./images/photo9.jpg" alt="Foto 9"></figure>
+          <figure class="shot"><img src="./images/photo10.jpg" alt="Foto 10"></figure>
+          <figure class="shot"><img src="./images/photo11.jpg" alt="Foto 11"></figure>
+          <figure class="shot"><img src="./images/photo12.jpg" alt="Foto 12"></figure>
+          <figure class="shot"><img src="./images/photo13.jpg" alt="Foto 13"></figure>
+          <figure class="shot"><img src="./images/photo14.jpg" alt="Foto 14"></figure>
         </div>
       </div>
     </div>
@@ -359,57 +441,55 @@ h1,h2{ margin:0 }
 
 <script>
 /* =========================
-   Scroll + Nav + Parallax
+   Horizontal: Scroll + Bullets + Arc
    ========================= */
 const rail = document.getElementById('rail');
 const sections = [...document.querySelectorAll('.section')];
 const bullets = [...document.querySelectorAll('.bullet')];
 const arc = document.getElementById('arcProg');
 
-// Bullet-Klick → zu Sektion springen
 bullets.forEach(b => b.addEventListener('click', () => {
   const id = b.dataset.goto;
   const el = document.getElementById(id);
   rail.scrollTo({ left: el.offsetLeft - rail.offsetLeft - parseInt(getComputedStyle(rail).paddingLeft), behavior:'smooth' });
 }));
 
-// active bullet + arc progress updaten
-function onScroll(){
+function onRailScroll(){
   const x = rail.scrollLeft;
   const w = rail.clientWidth;
-  const idx = Math.round(x / w); // welcher Snap
+  const idx = Math.round(x / w);
   bullets.forEach((b,i)=> b.classList.toggle('active', i===idx));
 
-  // Arc-Progress (grob 0..1)
+  // Arc-Progress 0..1 -> 0..180°
   const p = Math.min(1, Math.max(0, x / (w * (sections.length-1))));
-  // einfacher Bogen von links nach rechts (SVG-Arc anpassen)
-  const sweep = 180 * p; // 0..180°
+  const sweep = 180 * p;
   const endX = 20 + 100 * Math.sin(sweep * Math.PI/180);
   const endY = 90 - 50 * Math.cos(sweep * Math.PI/180);
   const largeArc = p > .5 ? 1 : 0;
   arc.setAttribute('d', `M20 90 A50 50 0 ${largeArc} 0 ${endX.toFixed(1)} ${endY.toFixed(1)}`);
 }
-rail.addEventListener('scroll', onScroll, { passive:true });
-onScroll();
+rail.addEventListener('scroll', onRailScroll, { passive:true });
+onRailScroll();
 
-// Tastaturpfeile
+// Tastatur Navigation
 window.addEventListener('keydown', (e)=>{
   const step = rail.clientWidth;
   if(e.key === 'ArrowRight') rail.scrollBy({left: step, behavior:'smooth'});
   if(e.key === 'ArrowLeft')  rail.scrollBy({left:-step, behavior:'smooth'});
 });
 
-// Dezente Parallax-Dekor (falls SVG vorhanden)
-const decoys = [...document.querySelectorAll('.decoy')];
-function parallax(){
-  const x = rail.scrollLeft;
-  decoys.forEach((el, i)=>{
-    const speed = 0.03 + i*0.01;
-    el.style.transform = `translate(${ -x*speed }px, ${ x*speed*0.12 }px) rotate(${ x*0.01 }deg)`;
+/* =========================
+   Foto-Sektion: Reveal via IntersectionObserver
+   ========================= */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.classList.add('in'); }
   });
-}
-rail.addEventListener('scroll', parallax, { passive:true });
-parallax();
+}, { root: document.getElementById('photoScroll'), threshold: 0.1 });
+
+document.querySelectorAll('#photo .shot, #photo .shot-text').forEach(el=>{
+  if(!el.classList.contains('in')) io.observe(el);
+});
 </script>
 </body>
 </html>
