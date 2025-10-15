@@ -1,496 +1,343 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Louis Meiering — Portfolio</title>
-<meta name="description" content="Portfolio von Louis Meiering — Gestaltung, Fotografie, Medien. Horizontal, snappend, editorial.">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-/* =========================
-   TOKENS (Editorial-Farbraum)
-   ========================= */
-:root{
-  --bg: #E7E3DE;      /* warmes helles Grau (Hintergrund) */
-  --paper: #ECE7E2;   /* leicht dunkleres Panel-Grau */
-  --ink: #111111;     /* fast Schwarz (Text) */
-  --muted: #6C6B69;   /* sekundärer Text */
-  --line: rgba(0,0,0,.12);
-  --red: #FF3F3F;     /* kräftiger Rot-Akzent */
-  --snap-gap: clamp(16px, 5vw, 52px);
-  --radius: 18px;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Louis Meiering – Portfolio</title>
+  <meta name="description" content="Portfolio von Louis Meiering – Gestaltung, Fotografie & digitale Arbeiten." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#e9e4df;            /* warmes, leicht graues Grund-Canvas */
+      --fg:#141413;            /* Textfarbe */
+      --muted:#8e8a86;         /* Sekundärtext */
+      --accent:#ff3b2e;        /* kräftiges Rot/Orange */
+      --accent-2:#ff614f;      /* weiches Verlauf-Rot */
+      --card:#ffffff;          /* Kartenhintergrund */
+      --gap:28px;
+      --radius:20px;
+    }
+    /* Reset / Base */
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg);}
+    h1,h2,h3{margin:0 0 12px 0;line-height:1.05}
+    p{margin:0 0 10px 0}
+    a{color:inherit}
+    .tag{display:inline-flex;gap:10px;align-items:center;border:1px solid var(--fg);padding:10px 14px;border-radius:999px;font-weight:600;letter-spacing:.02em}
+    .btn{appearance:none;border:none;background:var(--accent);color:#fff;padding:14px 18px;border-radius:999px;font-weight:700;cursor:pointer;transition:transform .08s ease,opacity .2s;box-shadow:0 6px 20px rgba(255,59,46,.25)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
 
-*{ box-sizing:border-box }
-html,body{ height:100% }
-html{ background:var(--bg) }
-body{
-  margin:0; font:16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color:var(--ink);
-  overflow: hidden; /* keine vertikale Scrollbar der Seite */
-}
+    /* --- Horizontales Scrolling mit Snap --- */
+    .scroller{display:flex;height:100vh;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth}
+    .section{min-width:100vw;height:100%;scroll-snap-align:start;position:relative;display:grid;grid-template-rows:1fr;}
 
-/* =========================
-   TOP BAR + NAV
-   ========================= */
-.topbar{
-  position:fixed; inset:0 0 auto 0; height:64px; z-index:20;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 clamp(14px, 3vw, 28px);
-  border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.25));
-  backdrop-filter: blur(6px);
-}
-.brand{
-  display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.2px;
-}
-.brand .stamp{
-  width:36px; height:36px; border-radius:50%;
-  border:2px solid var(--ink);
-  position:relative; overflow:hidden;
-}
-.brand .stamp::before{
-  content:""; position:absolute; inset:-40% -10%;
-  background:var(--red); transform:rotate(-12deg);
-}
-.brand em{ font-style: normal; font-family:"Space Grotesk", Inter, sans-serif; font-weight:700 }
+    /* Dekorative Corner Dots / Nummerierung */
+    .corner{position:absolute;top:18px;left:24px;display:flex;gap:8px;align-items:center}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+    .chapter{font-weight:800;letter-spacing:.06em;font-size:13px;text-transform:uppercase}
 
-/* Ungewöhnliche, schlichte Navigation: Bullets + Arc */
-.railnav{
-  position: absolute; top:8px; right:10px; height:48px; display:flex; align-items:center; gap:10px;
-}
-.railnav .arc{ position:relative; width:110px; height:110px; pointer-events:none; }
-.railnav svg{ position:absolute; top:-20px; left:-10px; overflow:visible; }
-.bullets{ display:flex; gap:10px; align-items:center; margin-left:8px; }
-.bullet{
-  width:11px; height:11px; border-radius:50%; background:#bbb; border:1px solid var(--ink);
-  cursor:pointer; transition:transform .2s ease, background .2s ease;
-}
-.bullet.active{ background:var(--red); transform:scale(1.2) }
-.hint{ font-size:12px; color:var(--muted); margin-left:6px }
+    /* Grid-Layouts pro Seite */
+    .wrap{height:100%;display:grid;gap:var(--gap);padding:64px;}
 
-/* =========================
-   HORIZONTAL RAIL (Seiten)
-   ========================= */
-.rail{
-  position:fixed; inset:64px 0 0 0;
-  display:grid; grid-auto-flow:column; grid-auto-columns: min(100vw, 100vw);
-  overflow-x:auto; overflow-y:hidden;
-  scroll-snap-type:x mandatory; scroll-behavior:smooth;
-  gap: var(--snap-gap); padding: var(--snap-gap);
-  -webkit-overflow-scrolling: touch;
-}
-.rail::-webkit-scrollbar{ height:10px }
-.rail::-webkit-scrollbar-thumb{ background:var(--ink); border-radius:999px }
-.rail::-webkit-scrollbar-track{ background:rgba(0,0,0,.08) }
+    /* 1 — About */
+    #about .wrap{grid-template-columns:460px 1fr;align-items:center}
+    .card{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    .avatar{border-radius:18px;aspect-ratio:3/4;object-fit:cover;width:100%;background:#d6d2cf}
+    .contact{display:flex;gap:14px;flex-wrap:wrap}
 
-/* Sektionen im Editorial-Layout */
-.section{
-  scroll-snap-align:start;
-  height: calc(100vh - 64px - var(--snap-gap)*2);
-  width: calc(100vw - var(--snap-gap)*2);
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius: var(--radius);
-  overflow:hidden;
-  display:grid;
-  grid-template-rows:auto 1fr;
-}
-.head{
-  display:flex; align-items:flex-end; justify-content:space-between;
-  padding:20px clamp(18px, 3.2vw, 36px);
-  border-bottom:1px solid var(--line);
-}
-.kicker{ font: 700 clamp(18px, 2.6vw, 28px)/1 "Space Grotesk", Inter, sans-serif; letter-spacing:.4px; }
-.label{ color:var(--muted); font-size:12px }
+    /* 2 — Skills */
+    #skills .wrap{grid-template-columns:1.1fr .9fr}
+    .logo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+    .logo{background:#fff;border-radius:14px;padding:18px;display:flex;align-items:center;justify-content:center;aspect-ratio:1;border:1px solid #e6e1dc}
+    .logo img{max-width:82%;max-height:82%}
+    .lists{display:grid;grid-template-columns:1fr;gap:18px}
 
-.body{
-  display:grid; gap:20px;
-  grid-template-columns: 1.15fr 1fr;
-  padding: clamp(16px, 3vw, 34px);
-}
-@media (max-width: 900px){
-  .body{ grid-template-columns:1fr; align-content:center }
-}
+    /* 3 — Design */
+    #design .wrap{grid-template-columns:.9fr 1.1fr}
+    .mockup-wall{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:120px;gap:12px;height:calc(100vh - 160px);overflow:auto;border-radius:16px}
+    .ph{background:#d9d5d1;border-radius:12px}
+    .ph.tall{grid-row:span 2}
+    .ph.wide{grid-column:span 2}
+    .ph.hero{grid-column:span 3;grid-row:span 2;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+    .note{font-size:13px;color:var(--muted)}
 
-/* Rote Blöcke im Vorlagenstil */
-.block-red{
-  background:var(--red); color:white; padding:18px;
-  border-radius:14px; border:1px solid rgba(0,0,0,.12);
-}
-.block-red h3{ margin:0 0 6px; font: 700 clamp(18px, 2.4vw, 26px)/1 "Space Grotesk", Inter, sans-serif; letter-spacing:.3px }
-.block-red p{ margin:0; font-size:14px; line-height:1.5 }
+    /* 4 — Fotografie */
+    #photo .wrap{grid-template-columns:1.05fr .95fr}
+    .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .sq{aspect-ratio:1;border-radius:12px;background:#cfcac6;overflow:hidden;position:relative}
+    .sq img{width:100%;height:100%;object-fit:cover;display:block}
+    .sq.accent{background:var(--accent);color:#fff;display:flex;align-items:flex-end}
+    .sq.accent p{padding:18px;font-weight:700;letter-spacing:.02em}
+    .reel{border-radius:14px;overflow:hidden}
+    .reel-track{display:flex;gap:10px;overflow:auto;padding-bottom:6px}
 
-/* Typo & Elemente */
-h1,h2{ margin:0 }
-.display{
-  font: 800 clamp(34px, 6.2vw, 104px)/.9 "Space Grotesk", Inter, sans-serif;
-  letter-spacing:.2px;
-}
-.lead{ color:var(--ink); font-size: clamp(14px, 1.6vw, 18px); max-width: 56ch }
-.muted{ color:var(--muted) }
+    /* 5 — Kontakt */
+    #contact .wrap{grid-template-columns:1fr 1fr;align-items:center}
+    .thanks{font-size:clamp(34px,4vw,56px);font-weight:800;letter-spacing:-.01em}
+    .footer-note{position:absolute;bottom:18px;left:24px;font-size:12px;color:var(--muted)}
 
-.frame{
-  border-radius:14px; overflow:hidden; border:1px solid var(--line);
-  transform: translateZ(0);
-}
-.frame img{ width:100%; height:100%; object-fit:cover; transform:scale(1.02); transition: transform .6s ease }
-.frame:hover img{ transform:scale(1.06) }
+    /* Dots-Navigation */
+    .nav{position:fixed;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;z-index:40}
+    .nav button{width:14px;height:14px;border-radius:50%;border:2px solid var(--fg);background:transparent;opacity:.5;cursor:pointer;transition:opacity .2s,transform .2s}
+    .nav button.active{opacity:1;background:var(--accent);border-color:var(--accent)}
+    .nav .label{position:absolute;right:22px;background:#000;color:#fff;padding:6px 10px;border-radius:999px;font-size:12px;opacity:0;pointer-events:none;transform:translateX(8px);transition:.18s}
+    .nav button:hover + .label{opacity:1;transform:translateX(0)}
 
-.grid{ display:grid; gap:12px }
-.grid-2{ grid-template-columns: 1fr 1fr }
-.grid-3{ grid-template-columns: 1fr 1fr 1fr }
-.list{ list-style:none; margin:0; padding:0 }
-.list li{ padding:8px 0; border-bottom:1px solid var(--line); font-size:14px }
-.badge{ display:inline-block; font-weight:700; font-size:12px; padding:4px 8px; border:1px solid var(--ink); border-radius:999px }
-
-/* =========================
-   NEUE FOTOGRAFIE-SEKTION
-   ========================= */
-.photo-shell{
-  display:grid;
-  grid-template-columns: 0.9fr 1.1fr; /* links Raster, rechts Scrollbereich */
-  gap: clamp(14px, 2.6vw, 28px);
-  height: 100%;
-  padding: clamp(14px, 2.6vw, 28px);
-}
-@media (max-width: 980px){
-  .photo-shell{ grid-template-columns: 1fr; }
-}
-
-/* Linke Seite: 3x5 Mini-Kachelraster (15) */
-.photo-wall{
-  display:grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr); /* <-- neue Zeilen definiert */
-  gap: 6px;
-  height: 100%;
-}
-
-.tile{
-  position:relative; border:1px solid var(--line); border-radius:10px; overflow:hidden;
-  background:#ddd;
-  aspect-ratio: 1/1; /* Quadratisch */
-}
-.tile img{ width:100%; height:100%; object-fit:cover; display:block; }
-.tile.red{ background:var(--red); border-color: rgba(0,0,0,.18); }
-.tile.red::after{
-  content:""; position:absolute; inset:8px;
-  border:2px solid rgba(255,255,255,.25); border-radius:8px;
-  /* nur visuelles Signal, kein Text */
-}
-
-/* Rechte Seite: eigener vertikaler Scrollbereich */
-.photo-scroll{
-  position:relative;
-  border:1px solid var(--line); border-radius:14px;
-  background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35));
-  overflow:hidden; /* Clip für Parallax-Effekt */
-  display:grid; grid-template-rows: 1fr; /* nur Inhalt */
-}
-.photo-scroll-inner{
-  overflow-y:auto; overflow-x:hidden;
-  padding: clamp(10px, 2vw, 18px);
-  scroll-snap-type: y proximity; /* sanftes Einrasten */
-  height: 100%;
-}
-.photo-scroll-inner::-webkit-scrollbar{ width:10px }
-.photo-scroll-inner::-webkit-scrollbar-thumb{ background:rgba(0,0,0,.35); border-radius:999px }
-
-/* Einzelne Shots */
-.shot, .shot-text{
-  border:1px solid var(--line); border-radius:12px; overflow:hidden;
-  background:#f7f6f4;
-  margin-bottom: clamp(12px, 2.2vw, 22px);
-  scroll-snap-align: start;
-  transform: translateY(18px) scale(.98);
-  opacity: 0;
-  transition: transform .7s cubic-bezier(.2,.7,0,1), opacity .7s ease;
-}
-.shot.in, .shot-text.in{
-  transform: translateY(0) scale(1); opacity: 1;
-}
-.shot img{ width:100%; height:100%; object-fit:cover; display:block; aspect-ratio: 1/1; }
-
-/* Text-Kachel (gleich groß wie Bilder in der Gestaltung) */
-.shot-text{
-  background: var(--red); color: #fff;
-  display:grid; align-content:center; padding: clamp(16px, 3vw, 28px);
-}
-.shot-text h3{
-  margin:0 0 8px; font: 700 clamp(18px, 2.4vw, 26px)/1 "Space Grotesk", Inter, sans-serif; letter-spacing:.3px
-}
-.shot-text p{ margin:0; font-size: clamp(13px, 1.5vw, 16px); line-height:1.6 }
-
-/* Mobile Tweaks */
-@media (max-width: 860px){
-  .topbar{ height:56px }
-  .rail{ inset:56px 0 0 0 }
-  .section{ height: calc(100vh - 56px - var(--snap-gap)*2) }
-  .railnav .arc{ display:none }
-  .hint{ display:none }
-}
-</style>
+    /* Responsiv */
+    @media (max-width: 1100px){
+      #about .wrap, #skills .wrap, #design .wrap, #photo .wrap, #contact .wrap{grid-template-columns:1fr;align-content:start;overflow:auto}
+      .mockup-wall{height:auto;grid-auto-rows:90px}
+      .logo-grid{grid-template-columns:repeat(4,1fr)}
+    }
+  </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <div class="stamp" aria-hidden="true"></div>
-    <div>
-      <div style="font-size:14px; letter-spacing:.4px; color:var(--muted)">Portfolio</div>
-      <div style="font-size:16px"><em>Louis Meiering</em></div>
+  <!-- Minimale kreative Dots-Navigation -->
+  <div class="nav" aria-label="Seitennavigation">
+    <div style="position:relative">
+      <button data-target="#about" aria-label="About" class="active"></button>
+      <span class="label">About</span>
+    </div>
+    <div style="position:relative">
+      <button data-target="#skills" aria-label="Skills"></button>
+      <span class="label">Skills</span>
+    </div>
+    <div style="position:relative">
+      <button data-target="#design" aria-label="Design"></button>
+      <span class="label">Design</span>
+    </div>
+    <div style="position:relative">
+      <button data-target="#photo" aria-label="Fotografie"></button>
+      <span class="label">Fotografie</span>
+    </div>
+    <div style="position:relative">
+      <button data-target="#contact" aria-label="Kontakt"></button>
+      <span class="label">Kontakt</span>
     </div>
   </div>
 
-  <div class="railnav" aria-label="Seitennavigation">
-    <div class="arc" aria-hidden="true">
-      <svg width="140" height="140" viewBox="0 0 140 140">
-        <path d="M20 90 A50 50 0 1 0 120 90" fill="none" stroke="black" stroke-opacity=".25" stroke-width="2"/>
-        <path id="arcProg" d="M20 90 A50 50 0 0 0 20 90" fill="none" stroke="#FF3F3F" stroke-width="3"/>
-      </svg>
-    </div>
-    <div class="bullets">
-      <div class="bullet" data-goto="about" title="About"></div>
-      <div class="bullet" data-goto="skills" title="Skills"></div>
-      <div class="bullet" data-goto="design" title="Gestaltung"></div>
-      <div class="bullet" data-goto="photo" title="Fotografie"></div>
-      <span class="hint">Swipe / Shift+Scroll</span>
-    </div>
-  </div>
-</header>
+  <main class="scroller" id="scroller">
 
-<main class="rail" id="rail" tabindex="0">
-
-  <!-- ========== 1. ABOUT ========== -->
-  <section class="section" id="about" aria-label="About me">
-    <div class="head">
-      <div class="kicker">ABOUT</div>
-      <div class="label"><span class="badge">Louis&nbsp;Meiering</span></div>
-    </div>
-
-    <div class="body" style="position:relative">
-      <div class="grid" style="align-content:center; gap:14px">
-        <h1 class="display">Gestaltung & Fotografie</h1>
-        <p class="lead">
-          Mediengestalter mit Fokus auf klare Layouts, konsistente Bildsprache und hochwertige
-          Umsetzung von Print bis Digital. Strukturiert, ruhig, mit Sinn für Typografie und Raster.
-        </p>
-        <div class="grid grid-2">
-          <div class="block-red">
-            <h3>Kontakt</h3>
-            <p>
-              <a href="mailto:meiering.louis97@gmail.com" style="color:#fff; text-decoration:underline">meiering.louis97@gmail.com</a><br/>
-              <a href="tel:+491785300541" style="color:#fff; text-decoration:underline">+49&nbsp;178&nbsp;5300&nbsp;541</a><br/>
-              Bocholt
-            </p>
+    <!-- 1 — About -->
+    <section class="section" id="about" aria-label="About">
+      <div class="corner">
+        <span class="dot"></span><span class="chapter">01 / ABOUT</span>
+      </div>
+      <div class="wrap">
+        <div class="card">
+          <img class="avatar" src="https://placehold.co/900x1200" alt="Portrait Louis Meiering" />
+        </div>
+        <div>
+          <h1 style="font-size:clamp(38px,5vw,72px)">Louis Meiering</h1>
+          <p style="font-size:18px;max-width:58ch">Gestalter & Fotograf mit Fokus auf klare, wirkungsvolle Markenkommunikation. 
+            Ich mag reduzierte Systeme, starke Typografie und Bilder, die Geschichten erzählen.</p>
+          <div style="height:22px"></div>
+          <div class="contact">
+            <a class="tag" href="mailto:meiering.louis97@gmail.com">meiering.louis97@gmail.com</a>
+            <span class="tag">+49 178 5300 541</span>
+            <button class="btn" onclick="location.href='mailto:meiering.louis97@gmail.com'">E‑Mail senden</button>
           </div>
-          <div class="frame" style="aspect-ratio: 4/3;">
-            <img src="./images/about.jpg" alt="Portrait / Arbeitsplatz">
+          <div style="height:22px"></div>
+          <div class="card" style="display:grid;gap:10px">
+            <h3>Steckbrief</h3>
+            <p><strong>Profil:</strong> Print & Digital Design, Fotografie, Markenauftritte</p>
+            <p><strong>Ort:</strong> Schleswig‑Holstein / Hamburg</p>
+            <p><strong>Arbeitsweise:</strong> Konzept → Gestaltung → Umsetzung (hands‑on)</p>
           </div>
         </div>
       </div>
+      <div class="footer-note">Gute Gestaltung endet nie – aber dieses Portfolio schon.</div>
+    </section>
 
-      <div class="grid">
-        <div class="frame" style="aspect-ratio:16/9">
-          <img src="./images/hero.jpg" alt="Hero-Bild / Editorial">
-        </div>
-        <ul class="list">
-          <li><strong>Stärken:</strong> Raster, Typo-Hierarchie, saubere Reinzeichnung</li>
-          <li><strong>Arbeitsweise:</strong> Idee → Layout → Bildkonzept → finale Ausspielung</li>
-        </ul>
+    <!-- 2 — Skills -->
+    <section class="section" id="skills" aria-label="Skills">
+      <div class="corner">
+        <span class="dot"></span><span class="chapter">02 / SKILLS</span>
       </div>
-    </div>
-  </section>
-
-  <!-- ========== 2. SKILLS ========== -->
-  <section class="section" id="skills" aria-label="Skills">
-    <div class="head">
-      <div class="kicker">SKILLS</div>
-      <div class="label muted">Tools • Sprachen</div>
-    </div>
-
-    <div class="body">
-      <div class="grid" style="align-content:center; gap:16px">
-        <h2 class="display">Gestaltung / Content</h2>
-        <p class="lead">
-          Adobe (Ps, Ai, Id, Pr, Ae, Lr) · Bildkonzepte · Retusche · Videoschnitt & Motion ·
-          Branding · Konsistente CI · Blender / C4D Basics.
-        </p>
-
-        <div class="grid grid-3">
-          <div class="block-red"><h3>Adobe Suite</h3><p>Photoshop, Illustrator, InDesign, Premiere, After Effects, Lightroom</p></div>
-          <div class="block-red"><h3>Content</h3><p>Fotografie, Retusche, Schnitt, einfache 3D-Workflows</p></div>
-          <div class="block-red"><h3>Prinzipien</h3><p>Raster, Lesefluss, Priorisierung, Wiedererkennbarkeit</p></div>
+      <div class="wrap">
+        <div>
+          <h2 style="font-size:34px">Werkzeuge</h2>
+          <p class="note">Auszug – orientiert am bestehenden Portfolio</p>
+          <div class="logo-grid" aria-label="Software-Logos">
+            <!-- Du kannst echte SVG/PNG-Logos ersetzen -->
+            <div class="logo" title="Adobe Photoshop">PS</div>
+            <div class="logo" title="Adobe Illustrator">AI</div>
+            <div class="logo" title="Adobe InDesign">ID</div>
+            <div class="logo" title="Blender">BL</div>
+            <div class="logo" title="Lightroom">LR</div>
+            <div class="logo" title="Premiere Pro">PR</div>
+            <div class="logo" title="Figma">FG</div>
+            <div class="logo" title="Wix">WIX</div>
+            <div class="logo" title="KI‑Bildgenerierung">AI*</div>
+            <div class="logo" title="Git / Github">GH</div>
+          </div>
+          <div style="height:16px"></div>
+          <div class="lists">
+            <div class="card">
+              <h3>Stärken</h3>
+              <p>Layout & Editorial, Key Visuals, Logos, Banner, Social Assets, einfache Websites.</p>
+            </div>
+            <div class="card">
+              <h3>Hobbys</h3>
+              <p>Fotografie, Musik, Outdoor, Handwerk, Technik – Dinge bauen und schön machen.</p>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="grid">
-        <div class="frame" style="aspect-ratio: 3/4;"><img src="./images/skills.jpg" alt="Layout / Typo"></div>
-        <ul class="list">
-          <li><strong>Sprachen:</strong> Deutsch (C2), Englisch (fließend)</li>
-          <li><strong>Führerschein:</strong> Klasse B</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== 3. GESTALTUNG / DESIGN ========== -->
-  <section class="section" id="design" aria-label="Gestaltung">
-    <div class="head">
-      <div class="kicker">GESTALTUNG</div>
-      <div class="label muted">Auswahl Arbeiten</div>
-    </div>
-
-    <div class="body">
-      <div class="grid" style="align-content:center; gap:14px">
-        <h2 class="display">Editorial & Kampagnen</h2>
-        <p class="lead">Klarer Informationsaufbau, starke Typo-Bild-Balance, präzise Ausarbeitung.</p>
-
-        <div class="grid grid-3">
-          <div class="frame" style="aspect-ratio: 16/11;"><img src="./images/design1.jpg" alt="Design 1"></div>
-          <div class="frame" style="aspect-ratio: 4/5;"><img src="./images/design2.jpg" alt="Design 2"></div>
-          <div class="frame" style="aspect-ratio: 16/10;"><img src="./images/design3.jpg" alt="Design 3"></div>
-        </div>
-
-        <div class="block-red">
-          <h3>Erfahrung</h3>
-          <p>KAAST Werkzeugmaschinen GmbH — Mediengestaltung / Art Direction (2023–24)</p>
+        <div class="card">
+          <h3>Ausgewählte Arbeiten (Beispiele)</h3>
+          <ul>
+            <li>Website‑Banner EMO 2023 (KAAST Werkzeugmaschinen GmbH)</li>
+            <li>GetGenius Image Broschüre (ITNT Media Group)</li>
+            <li>Wasbeker Dorfzeitung – Publikation unter Next Kollektiv GbR</li>
+            <li>Einladungsflyer EMO Hannover – KAAST</li>
+            <li>Logos: SG Steinburg Nord, Oymans Helfende Hände</li>
+          </ul>
+          <p class="note">Mehr Projekte im Bereich „Design“ rechts nebenan.</p>
         </div>
       </div>
+    </section>
 
-      <div class="grid">
-        <div class="frame" style="aspect-ratio: 21/9;"><img src="./images/banner.jpg" alt="Großformat / Banner"></div>
-        <ul class="list">
-          <li>Von Entwurf bis Reinzeichnung</li>
-          <li>Konsequente CI & Assets</li>
-          <li>Produkt- & Event-Visuals</li>
-        </ul>
+    <!-- 3 — Design -->
+    <section class="section" id="design" aria-label="Design">
+      <div class="corner">
+        <span class="dot"></span><span class="chapter">03 / DESIGN</span>
       </div>
-    </div>
-  </section>
-
-  <!-- ========== 4. FOTOGRAFIE — NEUE SEKTION ========== -->
-  <section class="section" id="photo" aria-label="Fotografie">
-    <div class="head">
-      <div class="kicker">FOTOGRAFIE</div>
-      <div class="label muted">Miniaturen & Serie</div>
-    </div>
-
-    <div class="photo-shell">
-      <!-- Linke Spalte: 3x5 Mini-Kacheln (15) -->
-      <div class="photo-wall" aria-label="Miniatur-Kacheln">
-        <!-- Reihenfolge frei; eine rote Kachel ohne Text als Signal -->
-        <div class="tile"><img src="./images/photo1_thumb.jpg" alt="Miniatur 1"></div>
-        <div class="tile red" title="Text im rechten Bereich, weiter scrollen"></div>
-        <div class="tile"><img src="./images/photo2_thumb.jpg" alt="Miniatur 2"></div>
-        <div class="tile"><img src="./images/photo3_thumb.jpg" alt="Miniatur 3"></div>
-        <div class="tile"><img src="./images/photo4_thumb.jpg" alt="Miniatur 4"></div>
-
-        <div class="tile"><img src="./images/photo5_thumb.jpg" alt="Miniatur 5"></div>
-        <div class="tile"><img src="./images/photo6_thumb.jpg" alt="Miniatur 6"></div>
-        <div class="tile"><img src="./images/photo7_thumb.jpg" alt="Miniatur 7"></div>
-        <div class="tile"><img src="./images/photo8_thumb.jpg" alt="Miniatur 8"></div>
-        <div class="tile"><img src="./images/photo9_thumb.jpg" alt="Miniatur 9"></div>
-
-        <div class="tile"><img src="./images/photo10_thumb.jpg" alt="Miniatur 10"></div>
-        <div class="tile"><img src="./images/photo11_thumb.jpg" alt="Miniatur 11"></div>
-        <div class="tile"><img src="./images/photo12_thumb.jpg" alt="Miniatur 12"></div>
-        <div class="tile"><img src="./images/photo13_thumb.jpg" alt="Miniatur 13"></div>
-        <div class="tile"><img src="./images/photo14_thumb.jpg" alt="Miniatur 14"></div>
-      </div>
-
-      <!-- Rechte Spalte: eigener Scrollbereich -->
-      <div class="photo-scroll" aria-label="Scrollbereich Fotografie">
-        <div class="photo-scroll-inner" id="photoScroll">
-          <!-- 1) Erstes Bild sofort sichtbar -->
-          <figure class="shot in">
-            <img src="./images/photo1.jpg" alt="Foto 1">
-          </figure>
-
-          <!-- 2) Rote Text-Kachel (Reveal beim ersten Scroll) -->
-          <article class="shot-text" id="photoText">
-            <h3>Warum Fotografie?</h3>
-            <p>
-              Mich reizt an Fotografie der ruhige Blick auf Form, Licht und Farbe — Motive, die
-              sich erst in der Serie erschließen. Mir geht es um Klarheit in der Bildsprache,
-              kontrollierte Reduktion und eine Atmosphäre, die nicht laut sein muss, um präsent zu sein.
-            </p>
-          </article>
-
-          <!-- 3) Restliche Fotos (2..14) -->
-          <figure class="shot"><img src="./images/photo2.jpg" alt="Foto 2"></figure>
-          <figure class="shot"><img src="./images/photo3.jpg" alt="Foto 3"></figure>
-          <figure class="shot"><img src="./images/photo4.jpg" alt="Foto 4"></figure>
-          <figure class="shot"><img src="./images/photo5.jpg" alt="Foto 5"></figure>
-          <figure class="shot"><img src="./images/photo6.jpg" alt="Foto 6"></figure>
-          <figure class="shot"><img src="./images/photo7.jpg" alt="Foto 7"></figure>
-          <figure class="shot"><img src="./images/photo8.jpg" alt="Foto 8"></figure>
-          <figure class="shot"><img src="./images/photo9.jpg" alt="Foto 9"></figure>
-          <figure class="shot"><img src="./images/photo10.jpg" alt="Foto 10"></figure>
-          <figure class="shot"><img src="./images/photo11.jpg" alt="Foto 11"></figure>
-          <figure class="shot"><img src="./images/photo12.jpg" alt="Foto 12"></figure>
-          <figure class="shot"><img src="./images/photo13.jpg" alt="Foto 13"></figure>
-          <figure class="shot"><img src="./images/photo14.jpg" alt="Foto 14"></figure>
+      <div class="wrap">
+        <div>
+          <h2 style="font-size:34px">Kontext</h2>
+          <p style="max-width:60ch">Hier ist Platz für kurze Projektinfos: Rolle, Auftrag, Tools, Ergebnis. 
+          Klare Typo, starke Flächen, pointierte Farbe – im Sinne des Referenz‑Styles.</p>
+          <div style="height:12px"></div>
+          <p class="note">Du kannst pro Kachel ein Mockup (JPG/PNG) verlinken. Die große bunte Fläche ist ein Hero‑Slot.</p>
+        </div>
+        <div class="mockup-wall" aria-label="Mockups">
+          <!-- Ersetze .ph durch echte Bilder <img src="...">. Die Größen bleiben automatisch im Raster. -->
+          <div class="ph hero"></div>
+          <div class="ph tall"></div>
+          <div class="ph wide"></div>
+          <div class="ph"></div>
+          <div class="ph"></div>
+          <div class="ph wide"></div>
+          <div class="ph"></div>
+          <div class="ph tall"></div>
+          <div class="ph"></div>
+          <div class="ph wide"></div>
+          <div class="ph"></div>
+          <div class="ph"></div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-</main>
+    <!-- 4 — Fotografie -->
+    <section class="section" id="photo" aria-label="Fotografie">
+      <div class="corner">
+        <span class="dot"></span><span class="chapter">04 / FOTOGRAFIE</span>
+      </div>
+      <div class="wrap">
+        <div>
+          <h2 style="font-size:34px">Serien & Momentaufnahmen</h2>
+          <p class="note">14 quadratische Bilder – plus eine Akzent‑Kachel mit Statement.</p>
+          <div class="photo-grid">
+            <div class="sq accent"><p>Inspiration: 
+              Menschen, Industrie, ehrliches Licht. 
+              Einfach – aber intensiv.</p></div>
+            <!-- 14 Platzhalter-Bilder; ersetzbar durch echte Quellen -->
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 1"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 2"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 3"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 4"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 5"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 6"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 7"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 8"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 9"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 10"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 11"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 12"></div>
+            <div class="sq"><img src="https://placehold.co/900" alt="Foto 13"></div>
+          </div>
+          <div style="height:14px"></div>
+          <div class="reel">
+            <div class="reel-track">
+              <img src="https://placehold.co/1400x900" alt="Slideshow A" height="260" />
+              <img src="https://placehold.co/1400x900" alt="Slideshow B" height="260" />
+              <img src="https://placehold.co/1400x900" alt="Slideshow C" height="260" />
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Ansatz</h3>
+          <p>Dokumentarisch mit grafischem Blick. Serien statt Einzelbilder, echte Orte statt Kulissen.</p>
+          <p class="note">Für Projekte: Portrait, Reportage, Produkt, Event.</p>
+        </div>
+      </div>
+    </section>
 
-<script>
-/* =========================
-   Horizontal: Scroll + Bullets + Arc
-   ========================= */
-const rail = document.getElementById('rail');
-const sections = [...document.querySelectorAll('.section')];
-const bullets = [...document.querySelectorAll('.bullet')];
-const arc = document.getElementById('arcProg');
+    <!-- 5 — Kontakt -->
+    <section class="section" id="contact" aria-label="Kontakt">
+      <div class="corner">
+        <span class="dot"></span><span class="chapter">05 / KONTAKT</span>
+      </div>
+      <div class="wrap">
+        <div>
+          <div class="thanks">Danke fürs Anschauen!</div>
+          <p style="max-width:60ch">Lust auf ein gemeinsames Projekt oder ein kurzes Kennenlernen? Schreiben Sie mir eine Nachricht – ich melde mich.</p>
+          <div style="height:18px"></div>
+          <button class="btn" onclick="location.href='mailto:meiering.louis97@gmail.com'">E‑Mail an Louis</button>
+        </div>
+        <div class="card">
+          <h3>Kontakt</h3>
+          <p><strong>E‑Mail:</strong> <a href="mailto:meiering.louis97@gmail.com">meiering.louis97@gmail.com</a></p>
+          <p><strong>Telefon:</strong> +49 178 5300 541</p>
+          <p class="note">Impressum/Datenschutz können später ergänzt werden.</p>
+        </div>
+      </div>
+    </section>
 
-bullets.forEach(b => b.addEventListener('click', () => {
-  const id = b.dataset.goto;
-  const el = document.getElementById(id);
-  rail.scrollTo({ left: el.offsetLeft - rail.offsetLeft - parseInt(getComputedStyle(rail).paddingLeft), behavior:'smooth' });
-}));
+  </main>
 
-function onRailScroll(){
-  const x = rail.scrollLeft;
-  const w = rail.clientWidth;
-  const idx = Math.round(x / w);
-  bullets.forEach((b,i)=> b.classList.toggle('active', i===idx));
+  <script>
+    // Vertikales Scroll‑Rad in horizontales Scrollen umwandeln
+    const scroller = document.getElementById('scroller');
+    scroller.addEventListener('wheel', (e)=>{
+      if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+        scroller.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }
+    }, {passive:false});
 
-  // Arc-Progress 0..1 -> 0..180°
-  const p = Math.min(1, Math.max(0, x / (w * (sections.length-1))));
-  const sweep = 180 * p;
-  const endX = 20 + 100 * Math.sin(sweep * Math.PI/180);
-  const endY = 90 - 50 * Math.cos(sweep * Math.PI/180);
-  const largeArc = p > .5 ? 1 : 0;
-  arc.setAttribute('d', `M20 90 A50 50 0 ${largeArc} 0 ${endX.toFixed(1)} ${endY.toFixed(1)}`);
-}
-rail.addEventListener('scroll', onRailScroll, { passive:true });
-onRailScroll();
+    // Dots‑Navigation
+    const sections = [...document.querySelectorAll('.section')];
+    const buttons = [...document.querySelectorAll('.nav button')];
+    buttons.forEach(btn=>btn.addEventListener('click',()=>{
+      const target = document.querySelector(btn.dataset.target);
+      if(target) target.scrollIntoView({behavior:'smooth', inline:'start'});
+    }));
 
-// Tastatur Navigation
-window.addEventListener('keydown', (e)=>{
-  const step = rail.clientWidth;
-  if(e.key === 'ArrowRight') rail.scrollBy({left: step, behavior:'smooth'});
-  if(e.key === 'ArrowLeft')  rail.scrollBy({left:-step, behavior:'smooth'});
-});
+    const onScroll = () => {
+      const center = scroller.scrollLeft + window.innerWidth/2;
+      let idx = 0; let min = Infinity;
+      sections.forEach((sec,i)=>{
+        const box = sec.getBoundingClientRect();
+        const left = sec.offsetLeft; const mid = left + sec.offsetWidth/2;
+        const dist = Math.abs(center - mid);
+        if(dist < min){ min = dist; idx = i; }
+      });
+      buttons.forEach((b,i)=> b.classList.toggle('active', i===idx));
+    };
+    scroller.addEventListener('scroll', onScroll);
+    window.addEventListener('resize', onScroll);
 
-/* =========================
-   Foto-Sektion: Reveal via IntersectionObserver
-   ========================= */
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){ entry.target.classList.add('in'); }
-  });
-}, { root: document.getElementById('photoScroll'), threshold: 0.1 });
-
-document.querySelectorAll('#photo .shot, #photo .shot-text').forEach(el=>{
-  if(!el.classList.contains('in')) io.observe(el);
-});
-</script>
+    // Tastatursteuerung ← →
+    window.addEventListener('keydown',(e)=>{
+      if(e.key==='ArrowRight') scroller.scrollBy({left: window.innerWidth, behavior:'smooth'});
+      if(e.key==='ArrowLeft') scroller.scrollBy({left: -window.innerWidth, behavior:'smooth'});
+    });
+  </script>
 </body>
 </html>
