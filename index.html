@@ -160,13 +160,14 @@ h1,h2{ margin:0 }
 }
 
 /* Linke Seite: 3x5 Mini-Kachelraster (15) */
-.photo-wall{   display:grid;   grid-template-columns: repeat(5, 1fr);   grid-template-rows: repeat(3, 1fr); /* <-- neue Zeilen definiert */   gap: 6px;   height: 100%; }
+.photo-wall{
   display:grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-auto-rows: 1fr;
-  gap: 6px; /* enger, wie Kontaktabzug */
+  grid-template-rows: repeat(3, 1fr); /* <-- neue Zeilen definiert */
+  gap: 6px;
   height: 100%;
 }
+
 .tile{
   position:relative; border:1px solid var(--line); border-radius:10px; overflow:hidden;
   background:#ddd;
